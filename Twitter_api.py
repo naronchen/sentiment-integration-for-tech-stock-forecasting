@@ -1,6 +1,7 @@
 from dotenv import load_dotenv
 import os
 import requests
+import time
 
 class TwitterAPI:
     def __init__(self):
@@ -27,9 +28,14 @@ class TwitterAPI:
     def connect_to_endpoint(self, url):
         response = requests.request("GET", url, auth=self.bearer_oauth)
         if response.status_code != 200:
-            raise Exception(f"Request returned an error: {response.status_code} {response.text}")
+            if response.status_code == 429:
+                print("Too many requests. Waiting for 15 minutes...")
+                time.sleep(15 * 60)  # Wait for 15 minutes
+                return self.connect_to_endpoint(url)
+            else:
+                raise Exception(f"Request returned an error: {response.status_code} {response.text}")
         return response.json()
-
+    
         #some twitter account has been deactivated, use dict to make sure they are filtered out
     def get_follower_counts(self, usernames_list):
         url = self.create_url(usernames_list)
