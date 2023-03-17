@@ -27,9 +27,10 @@ class TwitterAPI:
             raise Exception(f"Request returned an error: {response.status_code} {response.text}")
         return response.json()
 
+        #some twitter account has been deactivated, use dict to make sure they are filtered out
     def get_follower_counts(self, usernames_list):
         url = self.create_url(usernames_list)
         json_response = self.connect_to_endpoint(url)
-        follower_counts = [user_data['public_metrics']['followers_count'] for user_data in json_response['data']]
+        follower_counts = {user_data['username']: user_data['public_metrics']['followers_count'] for user_data in json_response['data']}
         return follower_counts
     

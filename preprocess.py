@@ -33,13 +33,15 @@ with open('Data/follower_counts.csv', 'w', newline='') as f:
 #         for j in range(100):
 #             writer.writerow([writers[i+j], follower_counts[j]])
 
-for i in range(0, 20, 10):
-    batch = writers[i:i+10]
-    print("bactch", len(batch))
+
+batch_size = 100
+for i in range(0, len(writers), batch_size):
+    batch = writers[i:i+batch_size]
+    # print("bactch", len(batch))
     follower_counts = twitter.get_follower_counts(batch)
-    print(len(follower_counts))
+    # print(len(follower_counts))
     # Write the results to the CSV file
     with open('Data/follower_counts.csv', 'a', newline='') as f:
         writer = csv.writer(f)
-        for j in range(len(follower_counts)):
-            writer.writerow([writers[i+j], follower_counts[j]])
+        for username, follower_count in follower_counts.items():
+            writer.writerow([username, follower_count])
