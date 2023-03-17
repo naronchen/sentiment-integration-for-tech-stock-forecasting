@@ -1,6 +1,8 @@
 from twitter_api import TwitterAPI
 import pandas as pd
 import csv
+import time
+
 
 df = pd.read_csv('Data/cleaned_Tweet.csv')
 
@@ -40,11 +42,21 @@ with open('Data/follower_counts.csv', 'w', newline='') as f:
 batch_size = 100
 for i in range(0, len(writers), batch_size):
     batch = writers[i:i+batch_size]
-    # print("bactch", len(batch))
-    follower_counts = twitter.get_follower_counts(batch)
-    # print(len(follower_counts))
-    # Write the results to the CSV file
-    with open('Data/follower_counts.csv', 'a', newline='') as f:
-        writer = csv.writer(f)
-        for username, follower_count in follower_counts.items():
-            writer.writerow([username, follower_count])
+
+    try:
+        # Get the follower counts for the current batch of writers
+        follower_counts = twitter.get_follower_counts(batch)
+
+        # Write the results to the CSV file
+        with open('Data/follower_counts.csv', 'a', newline='') as f:
+            writer = csv.writer(f)
+            for username, follower_count in follower_counts.items():
+                writer.writerow([username, follower_count])
+
+    except TwitterAPI.TwitterError as e:
+        if e.status_code == 429: # TooManyRequests
+            print("Too many requests. Waiting for 15 minutes...")
+            time.sleep(900) # 15 minutes = 900 seconds
+            continue # Try again after waiting
+        else:
+            raise e # Re-raise the exception if it's not a 429 error
