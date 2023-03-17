@@ -2,20 +2,23 @@ from twitter_api import TwitterAPI
 import pandas as pd
 import csv
 
-df = pd.read_csv('Data/Tweet.csv')
+df = pd.read_csv('Data/cleaned_Tweet.csv')
 
 # Count the number of unique writers
 writers = df['writer'].unique().tolist()
 
 # Print the result
-print('Number of unique writers:', len(writers))
-
+# print('Number of unique writers:', len(writers))
+# with open('Data/follower_names.csv', 'w', newline='') as f:
+#     writer = csv.writer(f)
+#     for w in writers:
+#         writer.writerow(f'{w}')
 # test api
 # twitter = TwitterAPI()
 # follower_counts = twitter.get_follower_counts(["VisualStockRSRC", "OpenAI"])
 # print(follower_counts)  # Output: [4166, 385495]
 
-
+pass
 twitter = TwitterAPI()
 
 # Initialize a CSV file to write the results

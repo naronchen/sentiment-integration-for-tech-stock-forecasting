@@ -12,6 +12,9 @@ class TwitterAPI:
 
     def create_url(self, usernames_list):
         # Join usernames with commas
+        for username in usernames_list:
+            if isinstance(username, float):
+                print("Found a float:", username)
         usernames = ','.join(usernames_list)
         url = f"https://api.twitter.com/2/users/by?usernames={usernames}&{self.user_fields}"
         return url
