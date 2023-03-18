@@ -13,9 +13,6 @@ class TwitterAPI:
 
     def create_url(self, usernames_list):
         # Join usernames with commas
-        for username in usernames_list:
-            if isinstance(username, float):
-                print("Found a float:", username)
         usernames = ','.join(usernames_list)
         url = f"https://api.twitter.com/2/users/by?usernames={usernames}&{self.user_fields}"
         return url
@@ -32,9 +29,13 @@ class TwitterAPI:
                 print("Too many requests. Waiting for 15 minutes...")
                 time.sleep(15 * 60)  # Wait for 15 minutes
                 return self.connect_to_endpoint(url)
+            elif response.status_code == 400:
+                print(f"Request returned an error: {response.status_code} {response.text}")
+                return None
             else:
                 raise Exception(f"Request returned an error: {response.status_code} {response.text}")
         return response.json()
+
     
         #some twitter account has been deactivated, use dict to make sure they are filtered out
     def get_follower_counts(self, usernames_list):

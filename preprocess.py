@@ -1,14 +1,18 @@
 from twitter_api import TwitterAPI
 import pandas as pd
 import csv
+import re
 
 
 df = pd.read_csv('Data/cleaned_Tweet.csv')
 
 # Count the number of unique writers
 writers = df['writer'].unique().tolist()
+prev_length = len(writers)
+writers = [writer for writer in writers if re.match('^[A-Za-z0-9_]{1,15}$', writer)]
 
 # Print the result
+print(f"filtered out {len(writers)-prev_length} as an invalid twitter name")
 print('Number of unique writers:', len(writers))
 # with open('Data/follower_names.csv', 'w', newline='') as f:
 #     writer = csv.writer(f)
@@ -20,6 +24,7 @@ print('Number of unique writers:', len(writers))
 # print(follower_counts)  # Output: [4166, 385495]
 
 twitter = TwitterAPI()
+
 
 # Initialize a CSV file to write the results
 with open('Data/follower_counts.csv', 'w', newline='') as f:
