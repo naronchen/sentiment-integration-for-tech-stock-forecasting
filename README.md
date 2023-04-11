@@ -2,3 +2,4 @@
 The Data is here https://richmond.box.com/s/e5c0lqln8n33pun49fu53s9b9jl2wux1
 
 Ultimate_twitter.csv should have all the features we need
+Ultimate folder has all companies data processed
